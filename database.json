@@ -1,7 +1,0 @@
-{
-    "development": {
-        "driver": "mongodb",
-        "database": "",
-        "host": "mongodb+srv://vhronsz:<password>@dbtest.lmopdol.mongodb.net/?retryWrites=true&w=majority&appName=dbtest"
-    }
-}
