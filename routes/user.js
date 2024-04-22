@@ -77,17 +77,42 @@ router.put("/update", async function (req, res, next) {
   const userToUpdate = req.body.userToUpdate;
   const updateData = req.updateData;
   let conn;
+
+  if(
+    !updateData
+  ){
+    res.json({
+      type: "error",
+      "message": "Update data cannot be null"
+    });
+  }
+
   try {
     conn = await mongoDb.connect(URL);
     let db = conn.db("db_ryansanjaya_betest");
     let collection = db.collection("users");
+    let user = await collection.findOne({userName: "asdasdsad"});
+    
+    if(user){
     collection.updateOne({userName: userToUpdate}, {
-      updateData
+      $set: { 
+        "userName": updateData.userName ? updateData.userName : user.userName,
+        "identityNumber": updateData.identityNumber  ? updateData.identityNumber : user.identityNumber,
+        "emailAddress": updateData.emailAddress  ? updateData.emailAddress : user.emailAddress,
+        "accountNumber": updateData.accountNumber  ? updateData.accountNumber : user.accountNumber
+      },
     });
     res.json({
       type: "success",
       message: "success update user"
     });
+    }else{
+      res.json({
+        type: "error",
+        "message": "User not found"
+      });
+    }
+
   } catch (err) {
     console.error(err);
     res.json({
@@ -124,3 +149,4 @@ router.delete("/delete", async function (req, res, next) {
 });
 
 module.exports = router;
+ 
