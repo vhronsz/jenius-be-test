@@ -25,10 +25,8 @@ router.get("/get", async function (req, res, next) {
   }
 });
 
-router.get("/get/{id}");
-
 router.post("/add", async function (req, res, next) {
-  //Validasi ga boleh sama
+
   const userName = req.body.userName ? req.body.userName : "";
   const identityNumber = req.body.identityNumber ? req.body.identityNumber : "";
   const emailAddress = req.body.emailAddress ? req.body.emailAddress : "";
@@ -40,62 +38,31 @@ router.post("/add", async function (req, res, next) {
     let db = conn.db("db_ryansanjaya_betest");
     let collection = db.collection("users");
 
-    await collection.insertOne({
-      userName: userName,
-      identityNumber: identityNumber,
-      emailAddress: emailAddress,
-      accountNumber: accountNumber
-    });
-
-    res.json({
-      type: "success",
-      message: "Success Add User",
-      data: {
+    let user = collection.findOne({userName: userName});
+    if(user){
+      res.json({
+        type: "error",
+        message: "User already exist"
+      })
+    }else{
+      await collection.insertOne({
         userName: userName,
         identityNumber: identityNumber,
         emailAddress: emailAddress,
         accountNumber: accountNumber
-      }
-    });
-  } catch (err) {
-    console.error(err);
-    res.json({
-      type: "error",
-      message: err
-    })
-  }
-});
+      });
 
-router.post("/bulk-add", async function (req, res, next) {
-  //Validasi ga boleh sama
-  const userName = req.body.userName ? req.body.userName : "";
-  const identityNumber = req.body.identityNumber ? req.body.identityNumber : "";
-  const emailAddress = req.body.emailAddress ? req.body.emailAddress : "";
-  const accountNumber = req.body.accountNumber ? req.body.accountNumber : "";
-
-  let conn;
-  try {
-    conn = await mongoDb.connect(URL);
-    let db = conn.db("db_ryansanjaya_betest");
-    let collection = db.collection("users");
-
-    await collection.insertOne({
-      userName: userName,
-      identityNumber: identityNumber,
-      emailAddress: emailAddress,
-      accountNumber: accountNumber
-    });
-
-    res.json({
-      type: "success",
-      message: "Success Add User",
-      data: {
-        userName: userName,
-        identityNumber: identityNumber,
-        emailAddress: emailAddress,
-        accountNumber: accountNumber
-      }
-    });
+      res.json({
+        type: "success",
+        message: "Success Add User",
+        data: {
+          userName: userName,
+          identityNumber: identityNumber,
+          emailAddress: emailAddress,
+          accountNumber: accountNumber
+        }
+      });
+    }
   } catch (err) {
     console.error(err);
     res.json({
@@ -119,11 +86,8 @@ router.put("/update", async function (req, res, next) {
     });
     res.json({
       type: "success",
-      message: "success update user",
-      data: {
-        
-      }
-    })
+      message: "success update user"
+    });
   } catch (err) {
     console.error(err);
     res.json({
@@ -149,21 +113,6 @@ router.delete("/delete", async function (req, res, next) {
         userName: userToDelete
       }
     })
-  } catch (err) {
-    console.error(err);
-    res.json({
-      type: "error",
-      message: err
-    })
-  }
-
-});
-
-router.delete("/bulk-delete", async function (req, res, next) {
-  const userToDelete = req.body.userToDelete;
-
-  try {
-
   } catch (err) {
     console.error(err);
     res.json({

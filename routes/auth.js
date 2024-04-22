@@ -3,10 +3,10 @@ var jwt = require("jsonwebtoken");
 
 var router = express.Router();
 
-router.get('/generate-token', function(req, res, next) {
-    const name = req.body.name;
+router.post('/generate-token', function(req, res, next) {
+    const userName = req.body.userName;
     const secret = "secret";
-    const token = jwt.sign({data: name},secret, {expiresIn: "1h"});
+    const token = jwt.sign({data: userName},secret, {expiresIn: "1h"});
     return res.json({
         "access-token": token
     });
