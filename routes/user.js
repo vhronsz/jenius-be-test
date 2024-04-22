@@ -12,11 +12,16 @@ router.get("/get", async function (req, res, next) {
     let collection = db.collection("users");
     let data = await collection.find().toArray();
     res.json({
+      type: "success",
       message: "Get User Data",
       data: data
     });
-  } catch (e) {
-    console.error(e);
+  } catch (err) {
+    console.error(err);
+    res.json({
+      type: "error",
+      message: err
+    })
   }
 });
 
@@ -32,7 +37,7 @@ router.post("/add", async function (req, res, next) {
     let db = conn.db("db_ryansanjaya_betest");
     let collection = db.collection("users");
 
-    let data = await collection.insertOne({
+    await collection.insertOne({
       userName: userName,
       identityNumber: identityNumber,
       emailAddress: emailAddress,
@@ -40,6 +45,7 @@ router.post("/add", async function (req, res, next) {
     });
 
     res.json({
+      type: "success",
       message: "Success Add User",
       data: {
         userName: userName,
@@ -48,12 +54,43 @@ router.post("/add", async function (req, res, next) {
         accountNumber: accountNumber
       }
     });
-  } catch (e) {
-    console.error(e);
+  } catch (err) {
+    console.error(err);
+    res.json({
+      type: "error",
+      message: err
+    })
   }
 });
 
-router.patch("/patch", function (req, res, next) {
+router.put("/update", function (req, res, next) {
+  const userToUpdate = req.body.userToUpdate;
+  const updateData = req.updateData;
+
+  try {
+
+  } catch (err) {
+    console.error(err);
+    res.json({
+      type: "error",
+      message: err
+    })
+  }
+
+});
+
+router.delete("/delete", function (req, res, next) {
+  const userToDelete = req.body.userToDelete;
+
+  try {
+
+  } catch (err) {
+    console.error(err);
+    res.json({
+      type: "error",
+      message: err
+    })
+  }
 
 });
 
