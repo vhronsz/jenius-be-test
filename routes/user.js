@@ -25,6 +25,29 @@ router.get("/get", async function (req, res, next) {
   }
 });
 
+router.get("/get/:userName", async function (req, res, next) {
+  const userName = req.params.userName;
+  let conn;
+  console.log(userName);
+  try {
+    conn = await mongoDb.connect(URL);
+    let db = conn.db("db_ryansanjaya_betest");
+    let collection = db.collection("users");
+    let data = await collection.findOne({userName: userName});
+    res.json({
+      type: "success",
+      message: "Get User Data",
+      data: data
+    });
+  } catch (err) {
+    console.error(err);
+    res.json({
+      type: "error",
+      message: err
+    })
+  }
+});
+
 router.post("/add", async function (req, res, next) {
 
   const userName = req.body.userName ? req.body.userName : "";
@@ -73,7 +96,6 @@ router.post("/add", async function (req, res, next) {
 });
 
 router.put("/update", async function (req, res, next) {
-  //Validasi not found, ga boleh sama dengan user laen
   const userToUpdate = req.body.userToUpdate;
   const updateData = req.updateData;
   let conn;
